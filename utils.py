@@ -1,13 +1,13 @@
 import re
 
 
-def get_input(day_num: int) -> str:
-    with open('./../assets/day%d_input.txt' % day_num) as f:
+def get_input() -> str:
+    with open('./input.txt') as f:
         return f.read()
 
 
-def get_input_lines(day_num: int) -> list:
-    return get_input(day_num).split('\n')
+def get_input_lines() -> list:
+    return get_input().split('\n')
 
 
 def ints(text: str) -> tuple:

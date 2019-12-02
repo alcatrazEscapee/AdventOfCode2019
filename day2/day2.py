@@ -1,11 +1,11 @@
 # Day 2: 1202 Program Alarm
 # Rank 13 / 17
 
-from src.utils import *
+from utils import *
 
 
 def run(noun: int, verb: int) -> int:
-    values = [*ints(get_input(2))]
+    values = [*ints(get_input())]
     values[1] = noun
     values[2] = verb
     pointer = 0

@@ -1,8 +1,11 @@
-from src.utils import *
+# Day 1: The Tyranny of the Rocket Equation
+# Rank 143 / 349
+
+from utils import *
 
 
 def main():
-    modules = ints(read(1))
+    modules = ints(get_input())
     print('Part 1:', sum([d // 3 - 2 for d in modules]))
 
     total = 0
