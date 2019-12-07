@@ -1,0 +1,6 @@
+# Intellij
+venv/
+.git/
+.idea/
+*.iml
+*.xml

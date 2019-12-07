@@ -4,27 +4,23 @@
 from utils import *
 
 
-def run(noun: int, verb: int) -> int:
-    values = [*ints(get_input())]
-    values[1] = noun
-    values[2] = verb
-    pointer = 0
-    while values[pointer] != 99:
-        if values[pointer] == 1:
-            values[values[pointer + 3]] = values[values[pointer + 1]] + values[values[pointer + 2]]
-        elif values[pointer] == 2:
-            values[values[pointer + 3]] = values[values[pointer + 1]] * values[values[pointer + 2]]
-        pointer += 4
-    return values[0]
+def run(code: list, noun: int, verb: int) -> int:
+    # Solution has been modified to use the IntCode class from later problems
+    runner = IntCode(code, [])
+    runner.code[1] = noun
+    runner.code[2] = verb
+    runner.run()
+    return runner.code[0]
 
 
-def find_result(target: int) -> int:
+def find_result(code: list, target: int) -> int:
     for i in range(100):
         for j in range(100):
-            if target == run(i, j):
+            if target == run(code, i, j):
                 return i * 100 + j
 
 
 if __name__ == '__main__':
-    print('Part 1', run(12, 2))
-    print('Part 2', find_result(19690720))
+    input_code = [*ints(get_input())]
+    print('Part 1:', run(input_code, 12, 2))
+    print('Part 2:', find_result(input_code, 19690720))

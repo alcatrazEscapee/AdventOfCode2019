@@ -1,58 +1,14 @@
-# Day 5
+# Day 5: Sunny with a Chance of Asteroids
 
-from collections import defaultdict
 from utils import *
 
 
 def run(values: list, inputs: list) -> list:
-    code = defaultdict(int, [(i, values[i]) for i in range(len(values))])
-    pointer = 0
-    outputs = []
-    while True:
-        opcode = code[pointer] % 100
-        pos1 = ((code[pointer] // 100) % 10) == 0
-        pos2 = ((code[pointer] // 1000) % 10) == 0
-        # pos3 = ((code[pointer] // 10000) % 10) == 0
-
-        arg1 = code[code[pointer + 1]] if pos1 else code[pointer + 1]
-        arg2 = code[code[pointer + 2]] if pos2 else code[pointer + 2]
-        # arg3 = code[code[pointer + 3]] if pos3 else code[pointer + 3]
-
-        if opcode == 1:
-            code[code[pointer + 3]] = arg1 + arg2
-            pointer += 4
-        elif opcode == 2:
-            code[code[pointer + 3]] = arg1 * arg2
-            pointer += 4
-        elif opcode == 3:
-            code[code[pointer + 1]] = inputs.pop(0)
-            pointer += 2
-        elif opcode == 4:
-            outputs.append(arg1)
-            pointer += 2
-        elif opcode == 5:
-            if arg1 != 0:
-                pointer = arg2
-            else:
-                pointer += 3
-        elif opcode == 6:
-            if arg1 == 0:
-                pointer = arg2
-            else:
-                pointer += 3
-        elif opcode == 7:
-            code[code[pointer + 3]] = 1 if arg1 < arg2 else 0
-            pointer += 4
-        elif opcode == 8:
-            code[code[pointer + 3]] = 1 if arg1 == arg2 else 0
-            pointer += 4
-        elif opcode == 99:
-            break
-
-    return outputs
+    # Solution has been modified to use the IntCode class from later solutions
+    return IntCode(values, inputs).run().outputs
 
 
-def run_tests():
+if __name__ == '__main__':
     assert run([3, 0, 4, 0, 99], [123]) == [123]
     assert run([1002, 4, 3, 4, 33], []) == []
     assert run([1101, 100, -1, 4, 0], []) == []
@@ -73,10 +29,6 @@ def run_tests():
     assert run(code, [7]) == [999]
     assert run(code, [8]) == [1000]
     assert run(code, [9]) == [1001]
-
-
-if __name__ == '__main__':
-    run_tests()
 
     input_code = [*ints(get_input())]
     print('Part 1:', run(input_code, [1])[-1])
