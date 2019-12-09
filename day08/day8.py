@@ -23,7 +23,7 @@ def decode_image(text, width, height):
 
 
 def print_image(image, width, height):
-    print('\n'.join(''.join({'0': '.', '1': '#'}[image[x + (y * width)]] for x in range(width)) for y in range(height)))
+    print('\n'.join(''.join({'0': '  ', '1': '\u2591\u2591'}[image[x + (y * width)]] for x in range(width)) for y in range(height)))
 
 
 if __name__ == '__main__':
