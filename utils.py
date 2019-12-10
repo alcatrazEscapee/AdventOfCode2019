@@ -1,6 +1,8 @@
 from re import findall
 from typing import Iterable
 from collections import defaultdict
+from functools import reduce
+from math import gcd
 
 
 # Input Reading
@@ -21,6 +23,58 @@ def flat_map(collection: Iterable):
     for container in collection:
         for element in container:
             yield element
+
+
+# Geometry
+def padd(x: Iterable, y: Iterable) -> list:
+    return [a + b for a, b in zip(x, y)]
+
+
+def psub(x: Iterable, y: Iterable) -> list:
+    return [a - b for a, b in zip(x, y)]
+
+
+def pmul(x: Iterable, a: float) -> list:
+    return [a * y for y in x]
+
+
+def pdot(x: Iterable, y: Iterable) -> list:
+    return sum(a * b for a, b in zip(x, y))
+
+
+def pnorm1(x: Iterable, y: Iterable = None) -> float:
+    if y is not None:
+        x = psub(x, y)
+    return sum(map(abs, x))
+
+
+def pnorm2sq(x: Iterable, y: Iterable = None) -> float:
+    if y is not None:
+        x = psub(x, y)
+    return sum(i * i for i in x)
+
+
+def lcm(a: int, b: int) -> int:
+    """ Return lowest common multiple. """
+    return a * b // gcd(a, b)
+
+
+def gcd_iter(sequence: Iterable) -> int:
+    """ Return greatest common divisor of a list """
+    return reduce(gcd, sequence)
+
+
+def ray_int(start: Iterable[int], end: Iterable[int]) -> list:
+    """ Returns a list of tuples of the points in a ray cast from start to end, not including either """
+    deltas = psub(end, start)
+    delta_gcd = gcd_iter(deltas)
+    points = []
+    if delta_gcd > 1:
+        for d in range(1, delta_gcd):
+            p = padd(start, pmul(deltas, d / delta_gcd))
+            if all(int(x) == x for x in p):
+                points.append(tuple(int(x) for x in p))
+    return points
 
 
 class IntCode:
