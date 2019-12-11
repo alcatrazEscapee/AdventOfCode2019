@@ -54,6 +54,18 @@ def pnorm2sq(x: Iterable, y: Iterable = None) -> float:
     return sum(i * i for i in x)
 
 
+def protccw(x) -> list:
+    return [-x[1], x[0]]
+
+
+def protcw(x) -> list:
+    return [x[1], -x[0]]
+
+
+def min_max(x: Iterable) -> tuple:
+    return min(x), max(x)
+
+
 def lcm(a: int, b: int) -> int:
     """ Return lowest common multiple. """
     return a * b // gcd(a, b)
@@ -136,6 +148,13 @@ class IntCode:
 
     def run(self):
         while self.running:
+            self.tick()
+        return self
+
+    def run_until(self):
+        """ Runs until paused """
+        self.paused = False
+        while not self.paused and self.running:
             self.tick()
         return self
 
