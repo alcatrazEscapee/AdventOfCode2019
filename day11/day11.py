@@ -35,7 +35,7 @@ def main(values):
     min_y, max_y = min_max([p[1] for p in panels.keys()])
 
     print('Part 2:')
-    print('\n'.join(''.join({1: '\u2591\u2591', 0: '  '}[panels[(x, y)]] for x in range(min_x, 1 + max_x)) for y in range(min_y, 1 + max_y)))
+    print('\n'.join(''.join({1: '\u2591\u2591', 0: '  '}[panels[(x, y)]] for x in range(min_x, max_x + 1)) for y in range(max_y, min_y - 1, -1)))
 
 
 if __name__ == '__main__':

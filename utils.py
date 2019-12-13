@@ -62,6 +62,14 @@ def protcw(x) -> list:
     return [x[1], -x[0]]
 
 
+def psign(x: Iterable) -> list:
+    return [(0 if y == 0 else (1 if y > 0 else -1)) for y in x]
+
+
+def pabs(x: Iterable) -> list:
+    return [abs(y) for y in x]
+
+
 def min_max(x: Iterable) -> tuple:
     return min(x), max(x)
 
@@ -74,6 +82,10 @@ def lcm(a: int, b: int) -> int:
 def gcd_iter(sequence: Iterable) -> int:
     """ Return greatest common divisor of a list """
     return reduce(gcd, sequence)
+
+
+def lcm_iter(sequence: Iterable) -> int:
+    return reduce(lcm, sequence)
 
 
 def ray_int(start: Iterable[int], end: Iterable[int]) -> list:
