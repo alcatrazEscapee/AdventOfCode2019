@@ -30,6 +30,6 @@ if __name__ == '__main__':
     assert run(code, [8]) == [1000]
     assert run(code, [9]) == [1001]
 
-    input_code = [*ints(get_input())]
+    input_code = get_input_intcode()
     print('Part 1:', run(input_code, [1])[-1])
     print('Part 2:', run(input_code, [5])[0])

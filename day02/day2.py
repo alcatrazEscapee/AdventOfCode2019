@@ -21,6 +21,6 @@ def find_result(code: list, target: int) -> int:
 
 
 if __name__ == '__main__':
-    input_code = [*ints(get_input())]
+    input_code = get_input_intcode()
     print('Part 1:', run(input_code, 12, 2))
     print('Part 2:', find_result(input_code, 19690720))

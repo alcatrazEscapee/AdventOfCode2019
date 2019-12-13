@@ -17,7 +17,7 @@ def main(values):
 
     while code.running:
         code.inputs.append(panels[robot])
-        code.run_until()
+        code.run()
         if code.running:
             panels[robot] = code.outputs.pop(0)
             painted_once.add(robot)
@@ -30,13 +30,9 @@ def main(values):
             robot = tuple(padd(robot, robot_dir))
 
     print('Part 1:', len(painted_once))
-
-    min_x, max_x = min_max([p[0] for p in panels.keys()])
-    min_y, max_y = min_max([p[1] for p in panels.keys()])
-
     print('Part 2:')
-    print('\n'.join(''.join({1: '\u2591\u2591', 0: '  '}[panels[(x, y)]] for x in range(min_x, max_x + 1)) for y in range(max_y, min_y - 1, -1)))
+    print_grid(panels, {1: '\u2591\u2591', 0: '  '})
 
 
 if __name__ == '__main__':
-    main([*ints(get_input())])
+    main(get_input_intcode())

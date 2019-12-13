@@ -15,6 +15,10 @@ def get_input_lines() -> list:
     return get_input().split('\n')
 
 
+def get_input_intcode() -> list:
+    return [*ints(get_input())]
+
+
 def ints(text: str) -> tuple:
     return tuple(map(int, findall('([\-+]?\d+)', text)))
 
@@ -70,6 +74,16 @@ def pabs(x: Iterable) -> list:
     return [abs(y) for y in x]
 
 
+def print_grid(grid_objects: dict, values_map: dict):
+    def pixel(p):
+        return values_map[p] if p in values_map else '?'
+
+    min_x, max_x = min_max([p[0] for p in grid_objects.keys()])
+    min_y, max_y = min_max([p[1] for p in grid_objects.keys()])
+
+    print('\n'.join(''.join(pixel(grid_objects[(x, y)]) for x in range(min_x, max_x + 1)) for y in range(max_y, min_y - 1, -1)))
+
+
 def min_max(x: Iterable) -> tuple:
     return min(x), max(x)
 
@@ -77,6 +91,10 @@ def min_max(x: Iterable) -> tuple:
 def lcm(a: int, b: int) -> int:
     """ Return lowest common multiple. """
     return a * b // gcd(a, b)
+
+
+def sign(a: int) -> int:
+    return 0 if a == 0 else (-1 if a < 0 else 1)
 
 
 def gcd_iter(sequence: Iterable) -> int:
@@ -104,7 +122,9 @@ def ray_int(start: Iterable[int], end: Iterable[int]) -> list:
 class IntCode:
     """ A basic class to execute intcode. Developed over day 2, 5, 7, and 9 """
 
-    def __init__(self, values: list, inputs: list):
+    def __init__(self, values: list, inputs: list = None):
+        if inputs is None:
+            inputs = []
         self.code = defaultdict(int, [(i, values[i]) for i in range(len(values))])
         self.pointer = 0
         self.inputs = inputs
@@ -159,11 +179,6 @@ class IntCode:
             self.running = False
 
     def run(self):
-        while self.running:
-            self.tick()
-        return self
-
-    def run_until(self):
         """ Runs until paused """
         self.paused = False
         while not self.paused and self.running:

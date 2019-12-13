@@ -30,7 +30,7 @@ def part2(code: list):
         # Run until all are finished
         while any(a.running for a in amplifiers):
             for a in amplifiers:
-                a.tick()
+                a.run()
 
         values.add(amplifiers[4].outputs[0])
 
@@ -38,6 +38,6 @@ def part2(code: list):
 
 
 if __name__ == '__main__':
-    input_code = [*ints(get_input())]
+    input_code = get_input_intcode()
     part1(input_code)
     part2(input_code)
