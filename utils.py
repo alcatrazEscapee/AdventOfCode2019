@@ -1,9 +1,10 @@
 from re import findall
-from typing import Iterable
+from typing import Iterable, Dict, Any, Tuple, List, TypeVar
 from collections import defaultdict
 from functools import reduce
 from math import gcd
 
+Number = TypeVar('Number', int, float)
 
 # Input Reading
 def get_input() -> str:
@@ -11,71 +12,65 @@ def get_input() -> str:
         return f.read()
 
 
-def get_input_lines() -> list:
+def get_input_lines() -> List[str]:
     return get_input().split('\n')
 
 
-def get_input_intcode() -> list:
+def get_input_intcode() -> List[int]:
     return [*ints(get_input())]
 
 
-def ints(text: str) -> tuple:
+def ints(text: str) -> Tuple[int]:
     return tuple(map(int, findall('([\-+]?\d+)', text)))
 
 
-def flat_map(collection: Iterable):
-    for container in collection:
-        for element in container:
-            yield element
-
-
 # Geometry
-def padd(x: Iterable, y: Iterable) -> list:
+def padd(x: Iterable[Number], y: Iterable[Number]) -> List[Number]:
     return [a + b for a, b in zip(x, y)]
 
 
-def psub(x: Iterable, y: Iterable) -> list:
+def psub(x: Iterable[Number], y: Iterable[Number]) -> List[Number]:
     return [a - b for a, b in zip(x, y)]
 
 
-def pmul(x: Iterable, a: float) -> list:
+def pmul(x: Iterable[Number], a: Number) -> List[Number]:
     return [a * y for y in x]
 
 
-def pdot(x: Iterable, y: Iterable) -> list:
+def pdot(x: Iterable[Number], y: Iterable[Number]) -> Number:
     return sum(a * b for a, b in zip(x, y))
 
 
-def pnorm1(x: Iterable, y: Iterable = None) -> float:
+def pnorm1(x: Iterable[Number], y: Iterable[Number] = None) -> Number:
     if y is not None:
         x = psub(x, y)
     return sum(map(abs, x))
 
 
-def pnorm2sq(x: Iterable, y: Iterable = None) -> float:
+def pnorm2sq(x: Iterable[Number], y: Iterable[Number] = None) -> Number:
     if y is not None:
         x = psub(x, y)
     return sum(i * i for i in x)
 
 
-def protccw(x) -> list:
+def protccw(x: List[Number]) -> List[Number]:
     return [-x[1], x[0]]
 
 
-def protcw(x) -> list:
+def protcw(x: List[Number]) -> List[Number]:
     return [x[1], -x[0]]
 
 
-def psign(x: Iterable) -> list:
-    return [(0 if y == 0 else (1 if y > 0 else -1)) for y in x]
+def psign(x: Iterable[Number]) -> List[Number]:
+    return [sign(y) for y in x]
 
 
-def pabs(x: Iterable) -> list:
+def pabs(x: Iterable[Number]) -> List[Number]:
     return [abs(y) for y in x]
 
 
-def print_grid(grid_objects: dict, values_map: dict):
-    def pixel(p):
+def print_grid(grid_objects: Dict[Tuple[int, int], Any], values_map: Dict[Any, str]):
+    def pixel(p: Any) -> str:
         return values_map[p] if p in values_map else '?'
 
     min_x, max_x = min_max([p[0] for p in grid_objects.keys()])
@@ -84,8 +79,12 @@ def print_grid(grid_objects: dict, values_map: dict):
     print('\n'.join(''.join(pixel(grid_objects[(x, y)]) for x in range(min_x, max_x + 1)) for y in range(max_y, min_y - 1, -1)))
 
 
-def min_max(x: Iterable) -> tuple:
+def min_max(x: Iterable[Number]) -> Tuple[Number, Number]:
     return min(x), max(x)
+
+
+def sign(a: Number) -> Number:
+    return 0 if a == 0 else (-1 if a < 0 else 1)
 
 
 def lcm(a: int, b: int) -> int:
@@ -93,16 +92,12 @@ def lcm(a: int, b: int) -> int:
     return a * b // gcd(a, b)
 
 
-def sign(a: int) -> int:
-    return 0 if a == 0 else (-1 if a < 0 else 1)
-
-
-def gcd_iter(sequence: Iterable) -> int:
+def gcd_iter(sequence: Iterable[int]) -> int:
     """ Return greatest common divisor of a list """
     return reduce(gcd, sequence)
 
 
-def lcm_iter(sequence: Iterable) -> int:
+def lcm_iter(sequence: Iterable[int]) -> int:
     return reduce(lcm, sequence)
 
 
@@ -119,10 +114,20 @@ def ray_int(start: Iterable[int], end: Iterable[int]) -> list:
     return points
 
 
+def bin_search(low: int, high: int, target: int, data) -> int:
+    while low < high:
+        mid = (low + high + 1) // 2
+        if data(mid) <= target:
+            low = mid
+        else:
+            high = mid - 1
+    return low
+
+
 class IntCode:
     """ A basic class to execute intcode. Developed over day 2, 5, 7, and 9 """
 
-    def __init__(self, values: list, inputs: list = None):
+    def __init__(self, values: List[int], inputs: List[int] = None):
         if inputs is None:
             inputs = []
         self.code = defaultdict(int, [(i, values[i]) for i in range(len(values))])
