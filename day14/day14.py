@@ -1,12 +1,5 @@
-# Day 14
-
-"""
-Reminders:
- - dicts, sets, sorting, Counter, enumerate, deque
- - padd, psub, pdot, pnorm1, pnorm2sq, protccw, protcw
- - gcd, lcm, min/max
- - IntCode, Cycle
-"""
+# Day 14: Space Stoichiometry
+# Rank 86 / 99
 
 from utils import *
 from collections import defaultdict

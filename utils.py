@@ -6,6 +6,7 @@ from math import gcd
 
 Number = TypeVar('Number', int, float)
 
+
 # Input Reading
 def get_input() -> str:
     with open('./input.txt') as f:
@@ -69,12 +70,19 @@ def pabs(x: Iterable[Number]) -> List[Number]:
     return [abs(y) for y in x]
 
 
-def print_grid(grid_objects: Dict[Tuple[int, int], Any], values_map: Dict[Any, str]):
+def print_grid(grid_objects: Dict[Tuple[int, int], Any], values_map: Dict[Any, str] or None = None, padding: int = 0):
     def pixel(p: Any) -> str:
-        return values_map[p] if p in values_map else '?'
+        if values_map is None:
+            return str(p)
+        else:
+            return values_map[p] if p in values_map else '?'
 
     min_x, max_x = min_max([p[0] for p in grid_objects.keys()])
     min_y, max_y = min_max([p[1] for p in grid_objects.keys()])
+    min_x -= padding
+    min_y -= padding
+    max_x += padding
+    max_y += padding
 
     print('\n'.join(''.join(pixel(grid_objects[(x, y)]) for x in range(min_x, max_x + 1)) for y in range(max_y, min_y - 1, -1)))
 
