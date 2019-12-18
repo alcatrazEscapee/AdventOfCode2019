@@ -1,6 +1,7 @@
 # Day 17
 
 from utils import *
+from collections import defaultdict
 
 
 def check_cameras(values):
