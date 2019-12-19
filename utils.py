@@ -8,13 +8,13 @@ Number = TypeVar('Number', int, float)
 
 
 # Input Reading
-def get_input() -> str:
-    with open('./input.txt') as f:
+def get_input(path: str = './input.txt') -> str:
+    with open(path) as f:
         return f.read()
 
 
-def get_input_lines() -> List[str]:
-    return get_input().split('\n')
+def get_input_lines(path: str = './input.txt') -> List[str]:
+    return get_input(path).split('\n')
 
 
 def get_input_intcode() -> List[int]:
@@ -70,7 +70,8 @@ def pabs(x: Iterable[Number]) -> List[Number]:
     return [abs(y) for y in x]
 
 
-def print_grid(grid_objects: Dict[Tuple[int, int], Any], values_map: Dict[Any, str] or None = None, padding: int = 0):
+def print_grid(grid_objects: Dict[Tuple[int, int], Any], values_map: Dict[Any, str] or None = None, padding: int = 0, reverse_y: bool = False, reverse_x: bool = False):
+    """ Prints a grid, represented as a map from points to values, to the console. Default is top right = positive x, y """
     def pixel(p: Any) -> str:
         if values_map is None:
             return str(p)
@@ -83,8 +84,10 @@ def print_grid(grid_objects: Dict[Tuple[int, int], Any], values_map: Dict[Any, s
     min_y -= padding
     max_x += padding
     max_y += padding
+    range_x = range(max_x, min_x - 1, -1) if reverse_x else range(min_x, max_x + 1)
+    range_y = range(min_y, max_y + 1) if reverse_y else range(max_y, min_y - 1, -1)
 
-    print('\n'.join(''.join(pixel(grid_objects[(x, y)]) for x in range(min_x, max_x + 1)) for y in range(max_y, min_y - 1, -1)))
+    print('\n'.join(''.join(pixel(grid_objects[(x, y)]) for x in range_x) for y in range_y))
 
 
 def min_max(x: Iterable[Number]) -> Tuple[Number, Number]:
