@@ -1,13 +1,5 @@
 # Day 16
 
-"""
-Reminders:
- - dicts, sets, sorting, Counter, enumerate, deque
- - padd, psub, pdot, pnorm1, pnorm2sq, protccw, protcw
- - gcd, lcm, min/max
- - IntCode, Cycle
-"""
-
 from utils import *
 
 

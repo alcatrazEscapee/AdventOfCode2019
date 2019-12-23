@@ -1,4 +1,4 @@
-# Day 18
+# Day 18: Many-Worlds Interpretation
 
 from utils import *
 from collections import defaultdict

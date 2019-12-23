@@ -112,6 +112,10 @@ def lcm_iter(sequence: Iterable[int]) -> int:
     return reduce(lcm, sequence)
 
 
+def mod_inv(x: Number, m: Number) -> int:
+    return pow(x, -1, m)
+
+
 def ray_int(start: Iterable[int], end: Iterable[int]) -> list:
     """ Returns a list of tuples of the points in a ray cast from start to end, not including either """
     deltas = psub(end, start)
@@ -138,15 +142,19 @@ def bin_search(low: int, high: int, target: int, data) -> int:
 class IntCode:
     """ A basic class to execute intcode. Developed over day 2, 5, 7, and 9 """
 
-    def __init__(self, values: List[int], inputs: List[int] = None):
+    def __init__(self, values: List[int], inputs: List[int] = None, input_default: bool = False, input_default_value: int = -1):
         if inputs is None:
             inputs = []
         self.code = defaultdict(int, [(i, values[i]) for i in range(len(values))])
         self.pointer = 0
         self.inputs = inputs
         self.outputs = []
+        self.input_default = input_default
+        self.input_default_value = input_default_value
+
         self.running = True
         self.paused = False
+        self.polling = False
         self.rel_base = 0
         self.pos_flags = [0, 0, 0]
 
@@ -167,11 +175,17 @@ class IntCode:
             if len(self.inputs) > 0:
                 self.code[self.addr(1)] = self.inputs.pop(0)
                 self.pointer += 2
+                self.polling = False
+            elif self.input_default:
+                self.code[self.addr(1)] = self.input_default_value
+                self.pointer += 2
+                self.polling = True
             else:
                 self.paused = True
         elif opcode == 4:
             self.outputs.append(self.arg(1))
             self.pointer += 2
+            self.polling = False
         elif opcode == 5:
             if self.arg(1) != 0:
                 self.pointer = self.arg(2)

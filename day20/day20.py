@@ -1,5 +1,4 @@
-# Day 20
-
+# Day 20: Donut Maze
 
 from utils import *
 from collections import defaultdict
