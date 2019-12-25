@@ -215,6 +215,10 @@ class IntCode:
             self.tick()
         return self
 
+    def asciz(self, s: str):
+        for c in s + '\n':
+            self.inputs.append(ord(c))
+
     def arg(self, i: int) -> int:
         """ Internal function to get an argument, after opcode / position flags have been calculated
         :param i: the index of the argument to get, as an offset from the opcode
