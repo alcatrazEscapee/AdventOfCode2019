@@ -1,5 +1,4 @@
 # Day 4: Secure Container
-# No ranks this time
 
 
 def main():

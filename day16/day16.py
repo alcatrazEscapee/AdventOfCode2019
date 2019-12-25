@@ -1,4 +1,4 @@
-# Day 16
+# Day 16: Flawed Frequency Transmission
 
 from utils import *
 

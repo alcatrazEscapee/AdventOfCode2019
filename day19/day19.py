@@ -1,6 +1,5 @@
 # Day 19: Tractor Beam
 
-
 from utils import *
 from collections import defaultdict
 from typing import Tuple

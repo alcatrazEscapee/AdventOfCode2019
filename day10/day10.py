@@ -1,4 +1,4 @@
-# Day 10
+# Day 10: Monitoring Station
 
 from utils import *
 from typing import Set

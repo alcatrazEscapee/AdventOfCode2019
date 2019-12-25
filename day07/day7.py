@@ -1,5 +1,5 @@
 # Day 7: Amplification Circuit
-# Leaderboard 36 / 25
+# Rank 36 / 25
 
 from itertools import permutations
 from utils import *
