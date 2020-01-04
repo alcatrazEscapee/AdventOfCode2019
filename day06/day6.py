@@ -2,9 +2,10 @@
 # Rank: 16 / 20
 
 from utils import *
+from typing import List
 
 
-def main(elements):
+def main(elements: List[str]):
     nodes = set()
     orbits = {}
     for edge in elements:

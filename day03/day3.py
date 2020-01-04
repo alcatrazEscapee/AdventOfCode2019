@@ -16,24 +16,20 @@ def main():
 def walk_wire(line):
     pos = (0, 0)
     points = {}
-    step = 0
+    count = 0
     for d in line.split(','):
         direction = d[0]
         length = int(d[1:])
         for _ in range(length):
-            if direction == 'U':
-                pos = pos[0], pos[1] + 1
-            elif direction == 'L':
-                pos = pos[0] - 1, pos[1]
-            elif direction == 'R':
-                pos = pos[0] + 1, pos[1]
-            elif direction == 'D':
-                pos = pos[0], pos[1] - 1
-            step += 1
+            step = DIRECTIONS[direction]
+            pos = pos[0] + step[0], pos[1] + step[1]
+            count += 1
             if pos not in points:
-                points[pos] = step
+                points[pos] = count
     return points
 
+
+DIRECTIONS = {'U': (0, 1), 'D': (0, -1), 'R': (1, 0), 'L': (-1, 0)}
 
 if __name__ == '__main__':
     main()

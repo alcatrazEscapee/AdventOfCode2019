@@ -1,39 +1,23 @@
 # Day 4: Secure Container
 
+from typing import Tuple
+from collections import Counter
 
-def main():
-    passwords = set()
-    passwords2 = set()
 
-    for num in range(156218, 652527):
+def count_valid_passwords(min_value: int, max_value: int) -> Tuple[int, int]:
+    part1 = part2 = 0
+
+    for num in range(min_value, max_value + 1):
         password = str(num)
+        if ''.join(sorted(password)) == password:
+            digit_counts = Counter(password)
+            if max(digit_counts.values()) >= 2:
+                part1 += 1
+                if 2 in digit_counts.values():
+                    part2 += 1
 
-        # check for ascending
-        ascending = True
-        for j in range(5):
-            if int(password[j]) > int(password[j + 1]):
-                ascending = False
-                break
-        if not ascending:
-            continue
-
-        # Check for adjacent pairs
-        adjacent, isolated = False, False
-        for j in range(10):
-            if str(j) * 2 in password:
-                adjacent = True
-                if str(j) * 3 not in password:
-                    isolated = True
-
-        # add to valid passwords
-        if adjacent:
-            passwords.add(num)
-            if isolated:
-                passwords2.add(num)
-
-    print('Part 1:', len(passwords))
-    print('Part 2:', len(passwords2))
+    return part1, part2
 
 
 if __name__ == '__main__':
-    main()
+    print('Part 1 / 2: ', *count_valid_passwords(156218, 652527))
