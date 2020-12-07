@@ -1,6 +1,10 @@
-# PyCharm
-venv/
-.git/
-.idea/
-*.iml
-*.xml
+*
+!*/
+
+!/.gitignore
+!/README.md
+!/LICENSE.txt
+!/utils.py
+
+!/day*/*.py
+!/day*/input*.*
