@@ -1,13 +1,13 @@
-from re import findall
-from typing import Iterable, Dict, Any, Tuple, List, TypeVar
+# AoC Utils
+
+import re
+import math
+import functools
+
 from collections import defaultdict
-from functools import reduce
-from math import gcd
-
-Number = TypeVar('Number', int, float)
+from typing import Any, DefaultDict, Dict, Iterable, List, Optional, Tuple, TypeVar
 
 
-# Input Reading
 def get_input(path: str = './input.txt') -> str:
     with open(path) as f:
         return f.read()
@@ -17,25 +17,28 @@ def get_input_lines(path: str = './input.txt') -> List[str]:
     return get_input(path).split('\n')
 
 
-def get_input_intcode() -> List[int]:
-    return [*ints(get_input())]
+def ints(text: str) -> Tuple[int, ...]:
+    return tuple(map(int, re.findall('([\-+]?\d+)', text)))
 
 
-def ints(text: str) -> Tuple[int]:
-    return tuple(map(int, findall('([\-+]?\d+)', text)))
+def floats(text: str) -> Tuple[float, ...]:
+    return tuple(map(float, re.findall('([\-+]?\d*(?:\d|\d\.|\.\d)\d*)', text)))
+
+
+Number = TypeVar('Number', int, float)
 
 
 # Geometry
-def padd(x: Iterable[Number], y: Iterable[Number]) -> List[Number]:
-    return [a + b for a, b in zip(x, y)]
+def padd(x: Iterable[Number], y: Iterable[Number]) -> Tuple[Number, ...]:
+    return tuple(a + b for a, b in zip(x, y))
 
 
-def psub(x: Iterable[Number], y: Iterable[Number]) -> List[Number]:
-    return [a - b for a, b in zip(x, y)]
+def psub(x: Iterable[Number], y: Iterable[Number]) -> Tuple[Number, ...]:
+    return tuple(a - b for a, b in zip(x, y))
 
 
-def pmul(x: Iterable[Number], a: Number) -> List[Number]:
-    return [a * y for y in x]
+def pmul(x: Iterable[Number], a: Number) -> Tuple[Number, ...]:
+    return tuple(a * y for y in x)
 
 
 def pdot(x: Iterable[Number], y: Iterable[Number]) -> Number:
@@ -54,40 +57,20 @@ def pnorm2sq(x: Iterable[Number], y: Iterable[Number] = None) -> Number:
     return sum(i * i for i in x)
 
 
-def protccw(x: List[Number]) -> List[Number]:
-    return [-x[1], x[0]]
+def protccw(x: Tuple[Number, Number]) -> Tuple[Number, Number]:
+    return -x[1], x[0]
 
 
-def protcw(x: List[Number]) -> List[Number]:
-    return [x[1], -x[0]]
+def protcw(x: Tuple[Number, Number]) -> Tuple[Number, Number]:
+    return x[1], -x[0]
 
 
-def psign(x: Iterable[Number]) -> List[Number]:
-    return [sign(y) for y in x]
+def psign(x: Iterable[Number]) -> Tuple[Number, ...]:
+    return tuple(sign(y) for y in x)
 
 
-def pabs(x: Iterable[Number]) -> List[Number]:
-    return [abs(y) for y in x]
-
-
-def print_grid(grid_objects: Dict[Tuple[int, int], Any], values_map: Dict[Any, str] or None = None, padding: int = 0, reverse_y: bool = False, reverse_x: bool = False):
-    """ Prints a grid, represented as a map from points to values, to the console. Default is top right = positive x, y """
-    def pixel(p: Any) -> str:
-        if values_map is None:
-            return str(p)
-        else:
-            return values_map[p] if p in values_map else '?'
-
-    min_x, max_x = min_max([p[0] for p in grid_objects.keys()])
-    min_y, max_y = min_max([p[1] for p in grid_objects.keys()])
-    min_x -= padding
-    min_y -= padding
-    max_x += padding
-    max_y += padding
-    range_x = range(max_x, min_x - 1, -1) if reverse_x else range(min_x, max_x + 1)
-    range_y = range(min_y, max_y + 1) if reverse_y else range(max_y, min_y - 1, -1)
-
-    print('\n'.join(''.join(pixel(grid_objects[(x, y)]) for x in range_x) for y in range_y))
+def pabs(x: Iterable[Number]) -> Tuple[Number, ...]:
+    return tuple(abs(y) for y in x)
 
 
 def min_max(x: Iterable[Number]) -> Tuple[Number, Number]:
@@ -100,16 +83,16 @@ def sign(a: Number) -> Number:
 
 def lcm(a: int, b: int) -> int:
     """ Return lowest common multiple. """
-    return a * b // gcd(a, b)
+    return a * b // math.gcd(a, b)
 
 
 def gcd_iter(sequence: Iterable[int]) -> int:
     """ Return greatest common divisor of a list """
-    return reduce(gcd, sequence)
+    return functools.reduce(math.gcd, sequence)
 
 
 def lcm_iter(sequence: Iterable[int]) -> int:
-    return reduce(lcm, sequence)
+    return functools.reduce(lcm, sequence)
 
 
 def mod_inv(x: Number, m: Number) -> int:
@@ -129,14 +112,41 @@ def ray_int(start: Iterable[int], end: Iterable[int]) -> list:
     return points
 
 
-def bin_search(low: int, high: int, target: int, data) -> int:
-    while low < high:
-        mid = (low + high + 1) // 2
-        if data(mid) <= target:
-            low = mid
+def make_grid(grid_text: str) -> Dict[Tuple[int, int], Optional[str]]:
+    """ Constructs a dictionary based grid from an ASCII / character representation
+    :param grid_text:
+    :return:
+    """
+    grid = defaultdict(lambda: None)
+    for y, line in enumerate(grid_text.split('\n')):
+        for x, c in enumerate(line):
+            grid[x, y] = c
+    return grid
+
+
+def print_grid(grid_objects: Dict[Tuple[int, int], Any], values_map: Optional[Dict[Any, str]] = None, padding: int = 0, reverse_y: bool = True, reverse_x: bool = False):
+    """ Prints a grid, represented as a map from points to values, to the console.
+    Default reverse_x = False, reverse_y = True uses quadrant IV sign convention (Right = +x, Down = +y)
+    With reverse_y = True, uses quadrant I sign convention (Right = +x, Up = +y)
+    """
+    def pixel(p: Any) -> str:
+        if values_map is None:
+            return str(p)
         else:
-            high = mid - 1
-    return low
+            return values_map[p] if p in values_map else '?'
+
+    min_x = min(p[0] for p in grid_objects.keys()) - padding
+    max_x = max(p[0] for p in grid_objects.keys()) + padding
+    min_y = min(p[1] for p in grid_objects.keys()) - padding
+    max_y = max(p[1] for p in grid_objects.keys()) + padding
+    range_x = range(max_x, min_x - 1, -1) if reverse_x else range(min_x, max_x + 1)
+    range_y = range(min_y, max_y + 1) if reverse_y else range(max_y, min_y - 1, -1)
+
+    print('\n'.join(''.join(pixel(grid_objects[(x, y)]) for x in range_x) for y in range_y))
+
+
+def get_input_intcode() -> List[int]:
+    return list(map(int, get_input().split(',')))
 
 
 class IntCode:
@@ -145,12 +155,12 @@ class IntCode:
     def __init__(self, values: List[int], inputs: List[int] = None, input_default: bool = False, input_default_value: int = -1):
         if inputs is None:
             inputs = []
-        self.code = defaultdict(int, [(i, values[i]) for i in range(len(values))])
-        self.pointer = 0
-        self.inputs = inputs
-        self.outputs = []
-        self.input_default = input_default
-        self.input_default_value = input_default_value
+        self.code: DefaultDict[int, int] = defaultdict(int, [(i, values[i]) for i in range(len(values))])
+        self.pointer: int = 0
+        self.inputs: List[int] = inputs
+        self.outputs: List[int] = []
+        self.input_default: bool = input_default
+        self.input_default_value: int = input_default_value
 
         self.running = True
         self.paused = False
@@ -244,3 +254,4 @@ class IntCode:
         elif self.pos_flags[i - 1] == 2:
             return self.rel_base + self.code[self.pointer + i]
         raise ValueError('Unknown argument mode %d' % self.pos_flags[i - 1])
+

@@ -8,6 +8,7 @@ from itertools import combinations, chain
 
 
 def play(runner: IntCode):
+    # Interactive mode!
     cmd = ''
     while cmd != 'exit' and runner.running:
         if cmd != '':
@@ -72,7 +73,8 @@ def checkpoint(runner: IntCode, items: List[str]):
 
 
 if __name__ == '__main__':
+    # Instructions were figured out by playing this by hand, and via use of the explore and checkpoint functions!
     droid = IntCode(get_input_intcode())
-    droid.asciz('south\nwest\ntake hologram\nsouth\nwest\nwest\ntake hypercube\neast\neast\nnorth\neast\nsouth\ntake cake\nwest\nnorth\ntake coin\nsouth\neast\neast\nsouth\neast\nsouth\nsouth')
+    droid.asciz('\n'.join(['south', 'west', 'take hologram', 'south', 'west', 'west', 'take hypercube', 'east', 'east', 'north', 'east', 'south', 'take cake', 'west', 'north', 'take coin', 'south', 'east', 'east', 'south', 'east', 'south', 'south']))
     droid.run()
     print('Part 1:', ints(''.join(chr(c) for c in droid.outputs))[0])
